@@ -1,4 +1,5 @@
 import java.io.*;
+import java.util.*;
 
 /**
  * This is the provided NumberTriangle class to be used in this coding task.
@@ -109,8 +110,9 @@ public class NumberTriangle {
         InputStream inputStream = NumberTriangle.class.getClassLoader().getResourceAsStream(fname);
         BufferedReader br = new BufferedReader(new InputStreamReader(inputStream));
 
-
-        // TODO define any variables that you want to use to store things
+        //variables
+        ArrayList<NumberTriangle> prev = new ArrayList<>();
+        ArrayList<NumberTriangle> curr = new ArrayList<>();
 
         // will need to return the top of the NumberTriangle,
         // so might want a variable for that.
@@ -122,7 +124,36 @@ public class NumberTriangle {
             // remove when done; this line is included so running starter code prints the contents of the file
             System.out.println(line);
 
-            // TODO process the line
+            //processes the FIRST root aka no previous row
+            if (top == null) {
+                top = new NumberTriangle(Integer.parseInt(line));
+                curr.add(top);
+            }
+            else{
+                //load previous row into the 'prev' variable
+                for(NumberTriangle t : curr){
+                    prev.add(t);
+                }
+                //clear the current row for initialization
+                curr.clear();
+
+                // converting line values as an array
+                String[] split = line.split(" ");
+                // adding the new 'number trees' into the current row
+                for(int i = 0; i < split.length; i++) {
+                    NumberTriangle tree = new NumberTriangle(Integer.parseInt(split[i]));
+                    curr.add(tree);
+                }
+
+                //linking left and right 'number triangles' for each node in the previous row
+                for(int i = 0; i < prev.size(); i++){
+                    prev.get(i).setLeft(curr.get(i));
+                    prev.get(i).setRight(curr.get(i+1));
+                }
+
+                //clear the previous row so we can refill it
+                prev.clear();
+            }
 
             //read the next line
             line = br.readLine();
