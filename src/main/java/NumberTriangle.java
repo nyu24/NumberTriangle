@@ -89,8 +89,31 @@ public class NumberTriangle {
      *
      */
     public int retrieve(String path) {
-        // TODO implement this method
-        return -1;
+        // take the String, character by character, update the root/current node based on 'l' or 'r'
+        // once path is empty, return the root value.
+        char[] directions = path.toCharArray();
+        //creating a mock 'number triangle' to prevent mutation of the original triangle.
+        NumberTriangle mock = new NumberTriangle(this.root);
+        mock.root = this.root;
+        mock.setLeft(this.left);
+        mock.setRight(this.right);
+
+        //traversing through the character array
+        for (char direction : directions) {
+            // if the direction is 'left' update the current root and its values
+            if (direction == 'l') {
+                mock.root = mock.left.getRoot();
+                mock.right = mock.left.right;
+                mock.left = mock.left.left;
+            }
+            // does the same but for 'right'
+            else if (direction == 'r') {
+                mock.root = mock.right.getRoot();
+                mock.left = mock.right.left;
+                mock.right = mock.right.right;
+            }
+        }
+        return mock.root;
     }
 
     /** Read in the NumberTriangle structure from a file.
